@@ -3,24 +3,24 @@ os: linux
 files:
   - source: /
     destination: /var/www/wordcount/
+  - source: /wordcount.conf
+    destination: /etc/httpd/conf.d/
+    runas: root
 permissions:
   - object: /var/www/wordcount
     pattern: "**"
     owner: ec2-user
     group: ec2-user
 hooks:
-  AfterInstall:
+  BeforeInstall:
     - location: scripts/install_dependencies
-      timeout: 1000
+      timeout: 300
       runas: root
-    - location: scripts/create_enviroment
-      timeout: 1000
+  AfterInstall:
+    - location: scripts/create_environment
+      timeout: 300
       runas: ec2-user
   ApplicationStart:
     - location: scripts/start_server
-      timeout: 1000
-      runas: root
-  ApplicationStop:
-    - location: scripts/stop_server
-      timeout: 1000
+      timeout: 300
       runas: root
